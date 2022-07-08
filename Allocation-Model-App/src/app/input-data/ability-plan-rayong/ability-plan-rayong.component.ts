@@ -264,7 +264,7 @@ export class AbilityPlanRayongComponent implements OnInit {
     //   versionNumberName = 0;
     // }
     // else {
-      versionNumberName = (version >= 0 ? (version + 1) : 0);
+    versionNumberName = (version >= 0 ? (version + 1) : 0);
     // }
 
     console.log("versionNumberName >> ", versionNumberName);

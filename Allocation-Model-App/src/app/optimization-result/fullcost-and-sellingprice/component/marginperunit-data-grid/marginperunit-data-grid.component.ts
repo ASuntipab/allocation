@@ -140,10 +140,10 @@ export class MarginperunitDataGridComponent implements OnInit {
     _.each(data, (item) => {
 
       let findList = _.find(this.calMarginDataList, i => {
-        return i.product === item.productName
-          && i.source === item.sourceName
-          && i.deliveryPoint === item.deliveryName
-          && i.demand === item.demandName
+        return item.product === i.productName
+          && item.source === i.sourceName
+          && item.deliveryPoint === i.deliveryName
+          && item.demand === i.demandName
       });
 
       console.log("findList >> ", findList);
@@ -154,9 +154,7 @@ export class MarginperunitDataGridComponent implements OnInit {
           findList['M' + item.valueMonth + item.year] = item.value - (findList['fullCostValue_M' + item.valueMonth + item.year]);
         }
       }
-
     });
-
   }
 
   onEditData($event) {
