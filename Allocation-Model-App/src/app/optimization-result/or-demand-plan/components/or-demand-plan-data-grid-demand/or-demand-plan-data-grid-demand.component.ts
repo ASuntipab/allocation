@@ -35,8 +35,16 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
   listMonth = [];
   dataInput = [];
   dataSupplier: any = [];
-  dataVessel = ["GSP KHM", "GC", "SPRC", "PTTGC's Jetty"];
-  dataCar = ["PTTEP/LKB", "BRP"];
+  dataVessel = [
+    {code: "GSPKHM", name:"GSP KHM"}, 
+    {code: "GC", name:"GC"},
+    {code: "SPRC", name:"SPRC"},
+    {code: "PTTGC's Jetty", name:"PTTGC's Jetty"}];
+
+  dataCar = [
+    {code: "PTTEP(LKB)", name:"PTTEP/LKB"}, 
+    {code: "BRP", name:"BRP"}
+  ];
 
   isCollapsedAnimated = false;
 
@@ -126,7 +134,7 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
     this.recursiveMonth = month;
     this.listMonth = [];
     let dateStart = moment(this.year + '-' + month + '-01');
-    let monthStart = dateStart.month() + 1;
+    let monthStart = dateStart.month() + 2;
     let yearStart = dateStart.year();
     dateStart = dateStart.add(1, 'M');
     for (let index = 1; index <= 12; index++) {
@@ -328,11 +336,15 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
     const dataAbilityRefinery = this.dataSupplier.abilityRefinery;
     const dataAbilityKHM = this.dataSupplier.abilityKHM;
 
+    console.log('dataAbilityRefinery',dataAbilityRefinery);
+    console.log('dataAbilityKHM',dataAbilityKHM);
+    console.log('this.listMonth',this.listMonth);
+
     // Box 2
     _.each(this.dataVessel, (itemVessel, index) => {
-      const dataList = { id: index, demand: itemVessel };
+      const dataList = { id: index, demand: itemVessel.name, demandCode: itemVessel.code };
       _.each(this.listMonth, (item) => {
-        if (itemVessel == 'GSP KHM') {
+        if (itemVessel.code == 'GSPKHM') {
           const findDataKHM = dataAbilityKHM.find((obj) => {
             return obj.monthValue === item.month && obj.yearValue === item.year;
           });
@@ -345,7 +357,7 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
 
         } else {
           const findDataRefinery = dataAbilityRefinery.find((obj) => {
-            return obj.monthValue === item.month && obj.yearValue === item.year && obj.supplier == itemVessel;
+            return obj.monthValue === item.month && obj.yearValue === item.year && obj.supplier == itemVessel.code;
           });
 
           if (findDataRefinery) {
@@ -363,7 +375,7 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
 
     // Box 1
     _.each(this.dataCar, (itemTotal, index) => {
-      const dataList = { id: index, demand: itemTotal };
+      const dataList = { id: index, demand: itemTotal.name, demandCode: itemTotal.code};
       _.each(this.listMonth, (item) => {
 
         const findDataRefinery = dataAbilityRefinery.find((obj) => {
@@ -375,9 +387,9 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
         });
 
         if (findDataRefinery) {
-          if (itemTotal == 'BRP') {
+          if (itemTotal.code == 'BRP') {
 
-            dataList['M' + item.month + item.year] = ((findListInput.brpPttepValue / 1000000) + findDataRefinery.value);
+            dataList['M' + item.month + item.year] = ((findListInput.brpPttepValue / 1000000) - findDataRefinery.value);
 
           } else {
             dataList['M' + item.month + item.year] = findDataRefinery.value;
@@ -385,7 +397,7 @@ export class OrDemandPlanDataGridDemandComponent implements OnInit {
 
         } else {
 
-          if (itemTotal == 'BRP') {
+          if (itemTotal.code == 'BRP') {
 
             dataList['M' + item.month + item.year] = (findListInput.brpPttepValue / 1000000);
 

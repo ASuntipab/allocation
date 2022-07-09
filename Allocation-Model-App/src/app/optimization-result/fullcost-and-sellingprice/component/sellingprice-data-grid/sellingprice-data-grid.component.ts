@@ -322,8 +322,6 @@ export class SellingpriceDataGridComponent implements OnInit {
             });
           });
 
-          this.onEventClick.emit(this.getDataSave(false));
-
         }).catch(err => {
           console.log("error > ", err);
         });

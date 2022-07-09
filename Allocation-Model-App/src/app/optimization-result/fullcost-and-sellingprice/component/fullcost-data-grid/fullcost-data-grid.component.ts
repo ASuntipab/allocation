@@ -256,8 +256,6 @@ export class FullcostDataGridComponent implements OnInit, AfterViewInit {
             });
           });
 
-          this.onEventClick.emit(this.getDataSave(false));
-
         }).catch(err => {
           console.log("error > ", err);
         });

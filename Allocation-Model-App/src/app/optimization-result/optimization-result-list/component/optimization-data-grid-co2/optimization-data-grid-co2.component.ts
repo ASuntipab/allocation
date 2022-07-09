@@ -310,7 +310,7 @@ export class OptimizationDataGridCo2Component implements OnInit {
   }
 
   onCellPrepared(e) {
-    if (e.rowType === "data" && e.columnIndex > 1 && !e.data.isViewOnly) {
+    if (e.rowType === "data" && e.columnIndex > 0 && !e.data.isViewOnly) {
       e.cellElement.classList.add('hovers');
       //e.cellElement.style.padding = '0';
     }
@@ -318,10 +318,11 @@ export class OptimizationDataGridCo2Component implements OnInit {
       e.cellElement.classList.add('colorEdit');
       //e.cellElement.style.padding = '0';
     }
-    if (e.rowType === "data" && e.data && e.data["isPaste" + (e.column.dataField)] === true) {
+    if (e.rowType === "data" && e.data && e.data["isPasteM" + (e.columnIndex - 1)] === true) {
       e.cellElement.classList.add('backgroundColorPaste');
     }
   }
+
 
   gridRefresh(calBack?) {
     // console.log("this.isFirstLoad >> ", this.isFirstLoad);
@@ -354,7 +355,7 @@ export class OptimizationDataGridCo2Component implements OnInit {
     return this.dataListVersion0[itemTemp.rowIndex][itemTemp.column.dataField]
   }
 
-  itemClick(event: any, row: any, columnIndex: any, data: any, item: any, dataField: any, monthEdit?: any, yearEdit?: any) {
+  itemClick(event: any, month: any, row: any, data: any, item: any, dataField: any, monthEdit?: any, yearEdit?: any) {
     console.log('item >> ', item);
     if (event.itemData.text === 'Paste') {
       navigator.clipboard.readText()
@@ -362,17 +363,16 @@ export class OptimizationDataGridCo2Component implements OnInit {
           let pastedText = txt;
           pastedText = pastedText.trim('\r\n');
           _.each(pastedText.split('\r\n'), (i2, index) => {
-            let runningIndex = columnIndex;
             _.each(i2.split('\t'), (i3, index3) => {
               let dataText = _.toNumber(_.trim(i3).replace(',', ''));
               if (dataText && _.isNumber(dataText)) {
-                if (columnIndex <= 12) {
-                  let month = this.listMonth[runningIndex].Month;
-                  let year = this.listMonth[runningIndex].Year;
-                  data[row + index]['isPasteM' + month + year] = true;
-                  data[row + index]['M' + month + year] = dataText;
-                  runningIndex++;
-                }
+                // const refTo = _.replace(data[row + index].referencePriceNameTo, new RegExp(' ', 'g'), '');
+                // if (refTo === 'PP:CFRSEA') {
+                const formula = _.find(_.cloneDeep(this.masterData.masterPrices), mProduct => { return mProduct.referencePriceNameFrom == data[row + index].referencePriceNameFrom && mProduct.referencePriceNameTo == data[row + index].referencePriceNameTo && mProduct.unit == data[row + index].unit }).formula;
+                dataText = eval(dataText + formula);
+                // }
+                data[row + index]['isPasteM' + (month + index3)] = true;
+                data[row + index]['M' + (month + index3)] = dataText;
               } else {
                 Swal.fire({
                   title: 'ไม่สารถนำข้อมูลมาแสดงเพิ่ม',

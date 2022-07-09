@@ -59,9 +59,6 @@ export class AbilityPlanRayongDataGridImportComponent implements OnInit {
   @Input() month: any = 1;
   @Input() maxVersion: any = 0;
 
-  numberBoxFormat = '#,##0';
-  @Input() numberBoxDigi = 0;
-
   @Output() onEventDataMonthDaily = new EventEmitter();
   @ViewChild('dataGridEthene', { static: false })
   dataGridEthene: DxDataGridComponent;

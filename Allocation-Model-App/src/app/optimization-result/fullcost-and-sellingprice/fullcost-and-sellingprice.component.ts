@@ -666,8 +666,6 @@ export class FullcostAndSellingpriceComponent implements OnInit {
         }
         objSellingPrice['formula'] = (findData && findData['sellingPriceFormulaText'] ? (findData['sellingPriceFormulaText'] ? findData['sellingPriceFormulaText'] : '') : '');
 
-        objMarginPerUnit['fullCostValue_M' + i.month + i.year] = fullCostValue;
-        objMarginPerUnit['sellingPriceValue_M' + i.month + i.year] = sellingPriceValue;
         // MarginPrerUnit = Selling Price - Full Cost
         objMarginPerUnit['M' + i.month + i.year] = sellingPriceValue - fullCostValue;
 
