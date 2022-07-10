@@ -976,9 +976,16 @@ export class OptimizationsController {
       data.id = item.contractConditionOfSaleId;
       data.key = { product: item.productName, source: item.sourceName, demand: item.demandName, delivery_point: item.deliveryName };
       data.volume = [];
-      data.year = _.unionBy(_.map(listMonth, 'Year'))
+      data.year = _.unionBy(_.map(listMonth, (item) => { 
+        return _.toString(item.Year)
+      }))
       _.each(data.year, (itemYear) => {
-        data.volume.push(null);
+        if (item.deliveryName === 'MT') {
+          data.volume.push(1);
+        } else {
+          data.volume.push(null);
+        }
+        
       })
       arrShip.push(data);
 
@@ -987,21 +994,22 @@ export class OptimizationsController {
       return item.product === 'NGL Shipment'
     })
 
-    let arrNGLShipment = [1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9];
-    // _.each(listMonth, (itemMonth, index) => {
-    //   const dataFilter = _.find(dataNGLShipment, (itemData) => {
-    //     return itemData.yearValue === itemMonth.Year && itemData.monthValue === itemMonth.Month;
-    //   })
-    //   if (dataFilter) {
-    //     arrNGLShipment.push(dataFilter.value * 1.9);
-    //   } else {
-    //     if (index === 0 && arrNGLShipment.length === 0) {
-    //       arrNGLShipment.push(0);
-    //     } else if (arrNGLShipment.length > 0) {
-    //       arrNGLShipment.push(arrNGLShipment[arrNGLShipment.length - 1]);
-    //     }
-    //   }
-    // })
+    let arrNGLShipmentVolumn = [1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9];
+    let arrNGLShipment = [];
+    _.each(listMonth, (itemMonth, index) => {
+      const dataFilter = _.find(dataNGLShipment, (itemData) => {
+        return itemData.yearValue === itemMonth.Year && itemData.monthValue === itemMonth.Month;
+      })
+      if (dataFilter) {
+        arrNGLShipment.push(dataFilter.value);
+      } else {
+        if (index === 0 && arrNGLShipment.length === 0) {
+          arrNGLShipment.push(0);
+        } else if (arrNGLShipment.length > 0) {
+          arrNGLShipment.push(arrNGLShipment[arrNGLShipment.length - 1]);
+        }
+      }
+    })
 
     dataSend.addition = {
       "c2": {
@@ -1023,6 +1031,11 @@ export class OptimizationsController {
       },
       "ngl": {
         "ship_capacity": {
+          "date": arrDate,
+          "volume": arrNGLShipmentVolumn
+        },
+
+        "ngl_shipment": {
           "date": arrDate,
           "volume": arrNGLShipment
         },
@@ -1099,9 +1112,9 @@ export class OptimizationsController {
     dataSend.addition['c3/lpg'].lpg_gsp_dom_ability = {};
     dataSend.addition['c3/lpg'].lpg_gsp_dom_ability.date = arrDate;
     dataSend.addition['c3/lpg'].lpg_gsp_dom_ability.volume = volumeLPGDomestic;
-    const fileName = 'optimizations_' + year + '_' + month + '_' + version + '_' + moment().format('YYYY_MM_DD_h_mm_ss') + '.txt'
-    dataSend.fileName = fileName;
-    this.createFile('./file', fileName, dataSend)
+    // const fileName = 'optimizations_' + year + '_' + month + '_' + version + '_' + moment().format('YYYY_MM_DD_hh_mm_ss') + '.txt'
+    // dataSend.fileName = fileName;
+    
     return dataSend;
 
     //allocate_c2scg ฟิวจากสัญญา
@@ -1143,5 +1156,11 @@ export class OptimizationsController {
   download(@Res() res, @Query('fileName') fileName) {
 
     return res.download('./file/' + fileName);
+  }
+
+
+  @Post('save-file')
+  saveFile(@Request() res,@Body() data: any) {
+    return this.createFile('./file', data.fileName, data.dataSend);
   }
 }

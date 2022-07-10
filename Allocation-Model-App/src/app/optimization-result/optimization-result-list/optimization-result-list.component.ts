@@ -1206,7 +1206,6 @@ export class OptimizationResultListComponent implements OnInit {
       this.optimizationsService.getDataToModel(optimizationCondition).subscribe((dataSend: any) => {
 
         let dataToModel = _.cloneDeep(dataSend);
-        this.dataInfo.jsonToModel = dataToModel.fileName;
         const dataListSCG = _.cloneDeep(this.optimizationDataGridC2.dataListSCG);
         const dataLPGPetro = _.cloneDeep(this.optimizationDataGridC3LPG.dataListBalanceLPGPetro);
         const dataC3 = _.cloneDeep(this.optimizationDataGridC3LPG.dataListBalanceC3);
@@ -1319,10 +1318,15 @@ export class OptimizationResultListComponent implements OnInit {
         dataToModel.addition['c3/lpg'].mt_c4_end_inventory_life.volume = volumeMt_c4_end_inventory_life;
         dataToModel.addition['c3/lpg'].Import_cargo_ptt.volume = volumeImport_cargo_ptt;
         dataToModel.fix_volume_month[0].volume = volumeSCG;
-
+        let dataSaveFile:any = {};
+        dataSaveFile.dataSend = dataToModel;
+        const fileName = 'optimizations_' + this.year + '_' + this.month + '_' + this.version + '_' + moment().format('YYYY_MM_DD_HH_mm_ss') + '.txt';
+        dataSaveFile.fileName = fileName;
+        this.dataInfo.jsonToModel = fileName;
         let observable: any = [];
         observable.push(this.optimizationsService.sendOptimize(dataToModel));
         observable.push(this.optimizationsService.sendOptimizeNGLShip(dataToModel));
+        observable.push(this.optimizationsService.saveFile(dataSaveFile));
 
         forkJoin(observable).subscribe(
           (res: any) => {

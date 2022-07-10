@@ -275,4 +275,12 @@ export class OptimizationsService {
       })
       .pipe(catchError(this.errorMethod));
   }
+
+  saveFile(data: any) {
+    // tslint:disable-next-line: arrow-return-shorthand
+    //C2C3_Pentane
+    return this.http
+      .post(this.url + 'save-file', data)
+      .pipe(catchError(this.errorMethod));
+  }
 }
