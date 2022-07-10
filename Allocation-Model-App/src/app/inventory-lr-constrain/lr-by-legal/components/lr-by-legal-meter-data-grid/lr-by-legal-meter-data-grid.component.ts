@@ -512,7 +512,7 @@ export class LRByLegalMeterDataGridComponent implements OnInit {
       if (isFrom) {
         this.dataInfoEditColumn.title = `${title} : All`;
         this.popupHeight = 400;
-        data.isAll = (data.isAll ? data.isAll : true);
+        data.isAll = (data.isAll ? data.isAll : false);
       } else {
         this.popupHeight = 350;
         month = this.listMonth[columnIndex].month;

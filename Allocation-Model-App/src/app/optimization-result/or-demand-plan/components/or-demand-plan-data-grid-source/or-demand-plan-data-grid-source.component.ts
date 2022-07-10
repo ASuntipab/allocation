@@ -102,7 +102,7 @@ export class OrDemandPlanDataGridSourceComponent implements OnInit {
     this.recursiveMonth = month;
     this.listMonth = [];
     let dateStart = moment(this.year + '-' + month + '-01');
-    let monthStart = dateStart.month() + 2;
+    let monthStart = dateStart.month() + 1;
     let yearStart = dateStart.year();
     dateStart = dateStart.add(1, 'M');
     for (let index = 1; index <= 12; index++) {
@@ -189,18 +189,18 @@ export class OrDemandPlanDataGridSourceComponent implements OnInit {
 
       _.each(this.listMonth, async (itemMonth) => {
         const dataManual = this.masterData.masterDataManual?.filter(
-          data => data.sourceId == item.sourceId &&
+          data => data.sourceName == item.sourceName &&
             data.demandName == item.demandName &&
-            data.deliveryId == item.deliveryId &&
+            data.deliveryName == item.deliveryName &&
             data.monthValue == itemMonth.month &&
             data.yearValue == itemMonth.year);
         if (dataManual?.length > 0) {
           objectPush['isManualM' + itemMonth.month + itemMonth.year] = true;
           objectPush['M' + itemMonth.month + itemMonth.year] = dataManual[0].value;
-          objectPush['RealM' + itemMonth.month + itemMonth.year] = await this.getValueFromSourceDelivery(item.sourceCode, item.customerCode, item.deliveryPointCode, item.transportationTypeCode, itemMonth.month, itemMonth.year);
+          objectPush['RealM' + itemMonth.month + itemMonth.year] = await this.getValueFromSourceDelivery(item.sourceName, item.demandName, item.deliveryName, item.transportationTypeCode, itemMonth.month, itemMonth.year);
         } else {
           objectPush['isManualM' + itemMonth.month + itemMonth.year] = false;
-          objectPush['M' + itemMonth.month + itemMonth.year] = await this.getValueFromSourceDelivery(item.sourceCode, item.customerCode, item.deliveryPointCode, item.transportationTypeCode, itemMonth.month, itemMonth.year);
+          objectPush['M' + itemMonth.month + itemMonth.year] = await this.getValueFromSourceDelivery(item.sourceName, item.demandName, item.deliveryName, item.transportationTypeCode, itemMonth.month, itemMonth.year);
         }
       });
 
@@ -214,9 +214,6 @@ export class OrDemandPlanDataGridSourceComponent implements OnInit {
   getValueFromSourceDelivery(source: any, demand: any, delivery: any, type: any, month: any, year: any) {
 
     // console.log('source', source);
-    // console.log('demand', demand);
-    // console.log('delivery', delivery);
-    // console.log('-----------------------------');
 
     let resValue = 0;
 
@@ -229,14 +226,14 @@ export class OrDemandPlanDataGridSourceComponent implements OnInit {
       // console.log('filterDataListInput',filterDataListInput);
 
       // ทางรถ //
-      if (source == "PTTEP(LKB)" && delivery == "PTTEPLKBTruck" && demand == "PTTOR") {
-        const filterDataListByCar = dataListByCar?.filter(car => car.demandCode == source);
+      if (source == "PTTEP/LKB" && delivery == "PTTEP/LKB" && demand == "LPG PTT OR") {
+        const filterDataListByCar = dataListByCar?.filter(car => car.demand == source);
         resValue = filterDataListByCar?.length > 0 ? filterDataListByCar[0]['M' + month + year] : 0;
       }
-      else if (source == "GSPRY" && delivery == "PTTTANKTRUCK" && demand == "PTTOR") {
+      else if (source == "GSP RY" && delivery == "PTT TANK (TRUCK)" && demand == "LPG PTT OR") {
         resValue = filterDataListInput?.length > 0 ? (filterDataListInput[0].propaneValue / 1000000) : 0;
       }
-      else if (source == "GSPRY" && delivery == "GSPRYTRUCK" && demand == "LPGPTTOR(LPGไม่มีกลิ่น)") {
+      else if (source == "GSP RY" && delivery == "GSP RY (Truck)" && demand == "LPG PTTOR (LPG ไม่มีกลิ่น)") {
         resValue = filterDataListInput?.length > 0 ? (filterDataListInput[0].spotOdorlessLpgValue / 1000000) : 0;
       }
 
@@ -245,20 +242,20 @@ export class OrDemandPlanDataGridSourceComponent implements OnInit {
       const dataListByVessel = this.dataImport?.getdataListByVessel?.dataListByVessel;
 
       // ทางเรือ //
-      if (source == "GSPKHM" && delivery == "GSPKHM" && demand == "PTTOR") {
-        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demandCode == source);
+      if (source == "GSP KHM" && delivery == "GSP KHM" && demand == "LPG PTT OR") {
+        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demand == source);
         resValue = filterDataListByVessel?.length > 0 ? filterDataListByVessel[0]['M' + month + year] : 0;
       }
-      else if (source == "SPRC" && delivery == "SPRC" && demand == "PTTOR") {
-        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demandCode == source);
+      else if (source == "SPRC" && delivery == "SPRC" && demand == "LPG PTT OR") {
+        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demand == source);
         resValue = filterDataListByVessel?.length > 0 ? filterDataListByVessel[0]['M' + month + year] : 0;
       }
-      else if (source == "GC" && delivery == "MT" && demand == "PTTOR") {
-        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demandCode == source);
+      else if (source == "GC" && delivery == "MT" && demand == "LPG PTT OR") {
+        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demand == source);
         resValue = filterDataListByVessel?.length > 0 ? filterDataListByVessel[0]['M' + month + year] : 0;
       }
-      else if (source == "IRPC" && delivery == "IRPC" && demand != "PTTOR") {
-        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demandCode == source);
+      else if (source == "IRPC" && delivery == "IRPC" && demand != "LPG PTT OR") {
+        const filterDataListByVessel = dataListByVessel?.filter(vessel => vessel.demand == source);
         resValue = filterDataListByVessel?.length > 0 ? filterDataListByVessel[0]['M' + month + year] : 0;
       }
 

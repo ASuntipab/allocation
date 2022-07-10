@@ -167,7 +167,6 @@ export class DepotManagementDataGridComponent implements OnInit {
         caption: item.MonthName,
         visible: item.visible,
         dataField: 'M' + item.month,
-        alignment: 'center',
         columns: [{  // {
           dataField: 'isCalculateM' + item.month,
           code: 'isCalculateM' + item.month,

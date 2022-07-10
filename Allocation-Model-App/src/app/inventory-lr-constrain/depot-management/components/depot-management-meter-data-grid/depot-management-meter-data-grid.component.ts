@@ -191,7 +191,6 @@ export class DepotManagementMeterDataGridComponent implements OnInit {
         caption: item.MonthName,
         visible: item.visible,
         dataField: 'M' + item.Month + item.Year,
-        alignment: 'center',
         columns: [
           {
             // {
@@ -321,7 +320,7 @@ export class DepotManagementMeterDataGridComponent implements OnInit {
       depotItem.minM = dataForm ? dataForm.min : 0;
       depotItem.maxM = dataForm ? dataForm.max : 0;
       depotItem.dayMonthM = dataForm ? dataForm.dayValue : 0;
-      depotItem.isAll = dataForm.isAll ? dataForm.isAll : true;
+      depotItem.isAll = dataForm ? dataForm.isAll : true;
 
       _.each(this.listMonth, (itemMonth) => {
 

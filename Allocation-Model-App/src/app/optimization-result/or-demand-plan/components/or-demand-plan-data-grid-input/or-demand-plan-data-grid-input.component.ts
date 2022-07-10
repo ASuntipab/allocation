@@ -114,7 +114,7 @@ export class OrDemandPlanDataGridInputComponent implements OnInit {
     this.recursiveMonth = month;
     this.listMonth = [];
     let dateStart = moment(this.year + '-' + month + '-01');
-    let monthStart = dateStart.month() + 2;
+    let monthStart = dateStart.month() + 1;
     let yearStart = dateStart.year();
     dateStart = dateStart.add(1, 'M');
     for (let index = 1; index <= 12; index++) {

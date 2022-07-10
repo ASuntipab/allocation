@@ -10,7 +10,6 @@
     </div>
   </div>
 </div>
-
 <!-- <div> -->
 <!-- <div class="setting-float-xx">
     <p class="txt-h-month">Month</p>
@@ -45,7 +44,7 @@
 <!-- </div> -->
 <div class="row">
   <div class="col-12">
-    <div class="block-wrapper" style="margin-bottom: 20px;">
+    <div class="block-wrapper">
       <div class="result-block">
         <div class="summary-block">
           <h3>C2</h3>
@@ -77,11 +76,11 @@
             <div *dxTemplate="let itemTemp of cellTemplate" placement="bottom">
               <ng-container *ngIf="numberBoxReadOnly; else elseTemplate">
                 <div>
-                  {{itemTemp.data[itemTemp.column.dataField] | number: '1.0-2'}}
+                  {{itemTemp.data[itemTemp.column.dataField] | number: '1.' + (numberBoxDigi ? numberBoxDigi: 0) + '-' +
+                  (numberBoxDigi ? numberBoxDigi: 0)}}
                 </div>
               </ng-container>
               <ng-template #elseTemplate>
-
                 <dx-number-box #numberBox [(value)]="itemTemp.data[itemTemp.column.dataField]">
                 </dx-number-box>
               </ng-template>

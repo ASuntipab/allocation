@@ -199,11 +199,21 @@
                     </div>
                   </div>
                   <div class="col-12">
-                    <div class="mb-4">
-                      <!-- <div class="card-body"> -->
+                    <div class="d-flex flex-row flex align-items-center">
+                      <div class="d-flex flex-column mt-2 ml-auto">
+                        <label class="has-float-label">
+                          <dx-number-box [width]="107" [step]="1" [min]="0" [max]="15" [(value)]="numberBoxDigi"
+                            (onFocusOut)="checkNullValue($event)" valueChangeEvent="keyup"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                          </dx-number-box>
+                          <span>จำนวนจุดทศนิยม</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="mb-2">
                       <app-ability-plan-rayong-data-grid-import [maxVersion]="maxVersion" class="custom-data-grid"
                         [numberBoxReadOnly]="numberBoxReadOnly" #abilityPlanRayongDataGridImport
-                        (onEventDataMonthDaily)="onEventDataMonthDaily($event)">
+                        [(numberBoxDigi)]="numberBoxDigi" (onEventDataMonthDaily)="onEventDataMonthDaily($event)">
                       </app-ability-plan-rayong-data-grid-import>
                       <!-- </div> -->
                     </div>
